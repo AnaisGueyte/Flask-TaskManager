@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+        <link href="{{ url_for('static', filename='css/hellostyle.css') }}" rel="stylesheet" type="text/css" />
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+      <title>Ma liste de tâches</title>
+   </head>
+   <body>
+      <div class="container">
+         <div class="alert alert-success alert-dismissible" role="alert">
+     {% with messages = get_flashed_messages(with_categories=true) %}
+         {% if messages %}
+         {% for category, message in messages %}
+         <div class="alert alert-{{ category }} alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">x</span></button>
+            {{ message }}
+         </div>
+         {% endfor %}
+         {% endif %}
+         {% endwith %}
+         </div>
+         <hr>
+         <div class="row">
+            <div class="col-md-10"><b>Mon compte</b></div>
+            <div class="col-md-2">
+               <form action="c" type="POST">
+                  <button type="submit" class="btn btn-default btn-sm">Me deconnecter</button>
+               </form>
+            </div>
+            <div class="col-md-12">
+
+               <p>Bonjour {{ current_user.pseudo }} !</p>
+
+            </div>
+         </div>
+         <br>
+         <hr>
+         <h3>Ma liste de tâches</h3>
+         <p>Trouvez ci-dessous la liste des tâches à effectuer...</p>
+         <br>
+         <table class="table">
+            <thead>
+               <tr>
+                  <th>To Do</th>
+                  <th>Assigné</th>
+                  <th>Avant le</th>
+                  <th>Done</th>
+                  <th>Crée par</th>
+               </tr>
+            </thead>
+            <tbody>
+
+                  {% if tasks %}
+                  {% for task in tasks %}
+               <tr>
+                  <td>{{ task.name }}</td>
+                  <td>{{ task.assignee.pseudo }}</td>
+                  <td>{{ task.date.strftime("%d-%m-%Y") }}</td>
+                  <td><button id="{{ task.id }}" class="glyphicon glyphicon-trash" onclick="deleteTask(this)" data-url="{{ url_for('deleteTask') }}"></button></td>
+                  <td>{{ task.user.pseudo }} </td>
+               </tr>
+               {% endfor %}
+               {% endif %}
+            </tbody>
+         </table>
+         <hr>
+         <div class="col-md-2">
+            <form action="{{ url_for('form') }}" type="POST">
+               <button type="submit" class="btn btn-default btn-sm">Ajouter une nouvelle tâche</button>
+            </form>
+         </div>
+      </div>
+      <script src="{{ url_for('static', filename='js/deletetask.js') }}"></script>
+      <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+   </body>
+</html>
